@@ -1,0 +1,26 @@
+{
+	"id": "1234",
+	"title": "ニセコ１",
+	"type": "line",
+	"url": "R0010159_er.MP4",
+	"next_node_id": "1",
+	"prev_node_id": "2",
+	"items": [
+		{
+			"title": "1",
+			"file": "img1.png",
+			"viewfile": "view1.jpg",
+			"start": 1,
+			"end": 5,
+			"type" : "0"
+		},
+		{
+			"title": "2",
+			"file": "img2.png",
+			"viewfile": "view2.jpg",
+			"start": 1,
+			"end": 5,
+			"type" : "1"
+		}
+	]
+}

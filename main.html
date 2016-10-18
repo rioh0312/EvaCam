@@ -1,0 +1,197 @@
+<html lang="ja">
+
+<head>
+	<title>Movie Panorama Example</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+	<style>
+		body {
+			margin: 0px;
+			overflow: hidden;
+			font-family: Verdana, Geneva, Tahoma, sans-serif;
+		}
+		
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		
+		#base {
+			position: absolute;
+			left: 0;
+			width: 100%;
+			height: 9000px;
+			z-index: -1;
+		}
+		
+		#world {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+		}
+		
+		#cursors {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 10;
+		}
+		
+		#cursors .cursor {
+			position: absolute;
+			width: 0;
+			height: 0;
+			top: 50%;
+		}
+		
+		#cursors .cursor-c {
+			left: 50%;
+		}
+		
+		#cursors .cursor-l {
+			left: 25%;
+			margin-left: -10px;
+		}
+		
+		#cursors .cursor-r {
+			right: 25%;
+			margin-right: -10px;
+		}
+		
+		#cursors .cursor .dot {
+			position: relative;
+			width: 10px;
+			height: 10px;
+			margin-top: -5px;
+			margin-left: -5px;
+			border-radius: 50%;
+			background: #f00;
+			opacity: 0.5;
+		}
+		
+		#info {
+			position: absolute;
+			width: 400px;
+			height: 130px;
+			background-color: rgba(48, 51, 54, 0.8);
+			bottom: 0;
+			left: 0;
+			border-radius: 5px;
+			border: 1px solid #444;
+			color: #edffff;
+			font-size: 8px;
+			overflow: scroll;
+			overflow-x: hidden;
+			/**display : none;**/
+		}
+		
+		#info > ul {
+			padding: 0px;
+			margin: 4px;
+		}
+		
+		#water-level {
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			z-index: 11;
+		}
+		
+		#water-level > div {
+			position: absolute;
+			width: 0;
+			height: 0;
+			top: 50%;
+			left: 50%;
+		}
+		
+		#water-level > div > svg {
+			position: relative;
+			width: 200px;
+			height: 200px;
+			margin-top: -100px;
+			margin-left: -100px;
+			border-radius: 50%;
+			background: #fff;
+			opacity: 0.5;
+		}
+		
+		#rangeX {
+			position: absolute;
+			top: 100px;
+		}
+	</style>
+
+	<script src="./lib/jquery-3.1.0.min.js"></script>
+	<script src="./lib/three/three.min.js"></script>
+	<script src="./lib/three/OrbitControls.js"></script>
+	<script src="./lib/three/DeviceOrientationControls.js"></script>
+	<script src="./lib/three/StereoEffect.js"></script>
+	<script src="./lib/three/Projector.js"></script>
+	<script src="./lib/three/stats.min.js"></script>
+	<script src="./lib/iphone-inline-video.browser.js"></script>
+	<!--<script src="./lib/d3/d3.min.js"></script>-->
+	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="./Viewer.js"></script>
+</head>
+
+<body>
+	<div id="base"></div>
+	<div id="world">
+		<div id="cursors">
+			<div class="cursor cursor-c view-0">
+				<p class="dot"></p>
+			</div>
+			<div class="cursor cursor-l view-1">
+				<p class="dot"></p>
+			</div>
+			<div class="cursor cursor-r view-1">
+				<p class="dot"></p>
+			</div>
+		</div>
+		<div id="water-level">
+			<div>
+				<svg viewBox="0 0 960 500">
+					<def>
+						<g id="manIcon">
+							<path d="M197,476c0,14,6.833,21,20.5,21s20.5-7,20.5-21V282h21v194c0,14,6.833,21,20.5,21s20.5-7,20.5-21
+			V149h10v121c0,7.334,2.5,12.667,7.5,16s10.167,3.333,15.5,0s8-8.667,8-16V145c0-14-4.667-25.5-14-34.5S305,97,289,97h-81
+			c-15.333,0-27.833,4.333-37.5,13S156,130,156,144v127c0,6.667,2.667,11.333,8,14c5.333,2.667,10.5,2.667,15.5,0s7.5-7.334,7.5-14
+			V149h10V476z"></path>
+							<path d="M205,42.5c0,11.667,4.167,21.667,12.5,30s18.333,12.5,30,12.5S269,80.833,277,72.5s12-18.333,12-30
+			s-4-21.667-12-30S259.167,0,247.5,0s-21.667,4.167-30,12.5S205,30.833,205,42.5z"></path>
+						</g>
+					</def>
+					<mask id="mask" maskUnits="userSpaceOnUse" x="0" y="0" width="100%" height="500">
+						<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#manIcon" x="260" y="0" fill="white" transform="translate(-25,-0) scale(1,1)"></use>
+					</mask>
+					<rect mask="url(#mask)" x="0" y="0" width="100%" height="500" fill="gray"></rect>
+					<rect id="bar" mask="url(#mask)" x="0" y="500" width="100%" height="0" fill="blue"></rect>
+				</svg>
+			</div>
+		</div>
+	</div>
+	<div id="info">
+		<ul id="log-field"></ul>
+	</div>
+
+	<script>
+		setInterval(function() {
+          var h = 500;
+	      var barH = h * Math.random();
+	      var bar = d3.select('#bar');
+	      bar.transition().attr({
+	      	'y':h - barH,
+	      	'height':barH
+	      })
+		}, 1000)
+      </script>
+	<script src="./main.js"></script>
+</body>
+
+</html>
