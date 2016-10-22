@@ -391,6 +391,8 @@ class Viewer {
             Viewer.writeLog('loaded node texture');
         });
 
+        this.changeBar(obj.height);
+
         // カメラを正面に向ける
         controls.center.set(0, 0, 0);
         camera.position.copy(controls.center).add(new THREE.Vector3(1, 0, 0));
@@ -566,4 +568,13 @@ class Viewer {
         $('#info').scrollTop($('#info')[0].scrollHeight);
     }
 
+    changeBar(value) {
+        var h = 500;
+        var barH = h * (value / 100);
+        var bar = d3.select('#bar');
+        bar.transition().attr({
+            'y': h - barH,
+            'height': barH
+        })
+    }
 }

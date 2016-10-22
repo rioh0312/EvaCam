@@ -178,18 +178,6 @@
 	<div id="info">
 		<ul id="log-field"></ul>
 	</div>
-
-	<script>
-		setInterval(function() {
-          var h = 500;
-	      var barH = h * Math.random();
-	      var bar = d3.select('#bar');
-	      bar.transition().attr({
-	      	'y':h - barH,
-	      	'height':barH
-	      })
-		}, 1000)
-      </script>
 	<script src="./main.js"></script>
 </body>
 

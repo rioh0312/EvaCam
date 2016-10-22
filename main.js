@@ -28,8 +28,8 @@ var viewer;
 
     $.ajax({
         type: "POST",
-        //url: "http://www.snowwhite.hokkaido.jp/manavimk2/node/send",
-        url: "node.json",
+        url: "http://www.snowwhite.hokkaido.jp/manavimk2/node/send",
+        //url: "node.json",
         dataType: "json",
         success: function (response) {
             viewer.updateMaterial(response);
