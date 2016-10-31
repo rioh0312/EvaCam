@@ -571,10 +571,13 @@ class Viewer {
     changeBar(value) {
         var h = 500;
         var barH = h * (value / 100);
-        var bar = d3.select('#bar');
-        bar.transition().attr({
-            'y': h - barH,
-            'height': barH
-        })
+        var bars = this.viewmode === '0' ? ['#bar'] : ['#bar-l', '#bar-r'];
+        for (var i = 0; i < bars.length; i++) {
+            var bar = d3.select(bars[i]);
+            bar.transition().attr({
+                'y': h - barH,
+                'height': barH
+            })
+        }
     }
 }
